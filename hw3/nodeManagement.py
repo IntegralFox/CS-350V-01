@@ -48,3 +48,18 @@ def genChildrenFor(node):
 		children.append(child)
 
 	return children
+
+
+# Print the contents of a solution node
+def printSolution(solution):
+	items = solution.itemsInSack
+	print 'Best combination of items in a sack that can hold {0:d}'.format(solution.weight)
+	print 'has a value of {0:d}.'.format(solution.value)
+	print '\nThe sack contains the following:'
+	print 'Item                      Weight     Value'
+	for i in range(0, len(solution.itemsInSack)):
+		print '{0:25} {1:<10d} {2:d}'.format(
+			items[i].description,
+			items[i].weight,
+			items[i].value
+		)

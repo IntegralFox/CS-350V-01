@@ -1,21 +1,21 @@
 '''
-Description: Depth First Search to solve the knapsack problem.
+Description: Breadth First Search to solve the knapsack problem.
 Author: Michael Welborn
 Date: 2015/2/1
 '''
 
-# Include the utilities in nodeManagement.py and the stack data structure deque
+# Include the utilities in nodeManagement.py and the queue data structure deque
 from nodeManagement import *
 from collections import deque
 import sys
 
 
-def depthFirstSearch(root, maxWeight):
+def breadthFirstSearch(root, maxWeight):
 	best = root
 	open = deque([root])
 
 	while len(open):
-		current = open.pop()
+		current = open.popleft()
 
 		# Discard and skip an item combination if it exceeds the weight limit
 		if current.weight > maxWeight:
@@ -57,6 +57,6 @@ for line in file:
 # Create a root node with value 0, weight 0, composed of no items
 root = Node(0, 0, [], items)
 
-solution = depthFirstSearch(root, maxWeight)
+solution = breadthFirstSearch(root, maxWeight)
 
 printSolution(solution)
