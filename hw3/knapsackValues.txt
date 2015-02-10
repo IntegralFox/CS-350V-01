@@ -1,4 +1,24 @@
-10
+30
+7 14 Bedroll
+5 9 Flashlight
+4 7 Flint and Iron
+1 1 Chaff
+7 14 Bedroll
+5 9 Flashlight
+4 7 Flint and Iron
+1 1 Chaff
+7 14 Bedroll
+5 9 Flashlight
+4 7 Flint and Iron
+1 1 Chaff
+7 14 Bedroll
+5 9 Flashlight
+4 7 Flint and Iron
+1 1 Chaff
+7 14 Bedroll
+5 9 Flashlight
+4 7 Flint and Iron
+1 1 Chaff
 7 14 Bedroll
 5 9 Flashlight
 4 7 Flint and Iron
