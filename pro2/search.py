@@ -119,9 +119,47 @@ def depthFirstSearch(problem):
 
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Containers to hold closed states, open states, and paths to those states
+    closedStates = []
+    openStates = util.Queue()
+    openPaths = util.Queue()
+
+    # Add the root node to the open states set and the way to get there to the
+    # open paths set
+    openStates.push(problem.getStartState())
+    openPaths.push([])
+
+    # Breadth first search algorithm
+    while not openStates.isEmpty():
+        # Get the next state
+        currentState = openStates.pop()
+        currentPath = openPaths.pop()
+
+        # Add the state to the set of closed states
+        closedStates.append(currentState)
+
+        if problem.isGoalState(currentState):
+            # If the state is the goal state, return the path to it
+            return currentPath
+        else:
+            # Otherwise, expand its children
+            children = problem.getSuccessors(currentState)
+            for child in children:
+                childState, childAction, childCost = child
+
+                # If a child is already in the open states or closed states
+                # sets, do not add it to the open states
+                if childState in closedStates or childState in openStates.list:
+                    continue
+
+                # The path to the child is the path to the parent plus the
+                # action to get to the child from the parent
+                childPath = currentPath[:]
+                childPath.append(childAction)
+
+                # Add the child state and its path to their respective sets
+                openStates.push(childState)
+                openPaths.push(childPath)
 
 
 def uniformCostSearch(problem):
