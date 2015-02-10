@@ -209,9 +209,45 @@ def nullHeuristic(state, problem=None):
 
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Containers to hold closed states and open states
+    closedStates = []
+    openStates = util.PriorityQueue()
+
+    # Add the root node to the open states set with cost 0
+    root = problem.getStartState()
+    h = heuristic(root, problem)
+    openStates.push([problem.getStartState(), [], 0], h)
+
+    # A* Traversal
+    while not openStates.isEmpty():
+        # Get the next state
+        currentState, currentPath, currentCost = openStates.pop()
+        closedStates.append(currentState)
+
+        if problem.isGoalState(currentState):
+            # If the state is the goal state, return the path to it
+            return currentPath
+        else:
+            # Otherwise, expand its children
+            children = problem.getSuccessors(currentState)
+            for child in children:
+                childState, childAction, g = child
+
+                # If a child is already in the open states or closed states
+                # sets, do not add it to the open states
+                if childState in closedStates:
+                    continue
+
+                # Update the current cost and path with the child's cost and
+                # action to create the child's path and cost
+                childPath = currentPath[:]
+                childPath.append(childAction)
+                g += currentCost
+                h = heuristic(childState, problem)
+                f = g + h
+
+                # Add the child state and its path to the priority queue
+                openStates.push([childState, childPath, g], f)
 
 
 # Abbreviations
