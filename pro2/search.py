@@ -163,9 +163,41 @@ def breadthFirstSearch(problem):
 
 
 def uniformCostSearch(problem):
-    """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Containers to hold closed states and open states
+    closedStates = []
+    openStates = util.PriorityQueue()
+
+    # Add the root node to the open states set with cost 0
+    openStates.push([problem.getStartState(), [], 0], 0)
+
+    # Uniform Cost Traversal
+    while not openStates.isEmpty():
+        # Get the next state
+        currentState, currentPath, currentCost = openStates.pop()
+        closedStates.append(currentState)
+
+        if problem.isGoalState(currentState):
+            # If the state is the goal state, return the path to it
+            return currentPath
+        else:
+            # Otherwise, expand its children
+            children = problem.getSuccessors(currentState)
+            for child in children:
+                childState, childAction, childCost = child
+
+                # If a child is already in the open states or closed states
+                # sets, do not add it to the open states
+                if childState in closedStates:
+                    continue
+
+                # Update the current cost and path with the child's cost and
+                # action to create the child's path and cost
+                childPath = currentPath[:]
+                childPath.append(childAction)
+                childCost += currentCost
+
+                # Add the child state and its path to the priority queue
+                openStates.push([childState, childPath, childCost], childCost)
 
 
 def nullHeuristic(state, problem=None):
