@@ -1,15 +1,15 @@
 # search.py
 # ---------
-# Licensing Information:  You are free to use or extend these projects for 
-# educational purposes provided that (1) you do not distribute or publish 
-# solutions, (2) you retain this notice, and (3) you provide clear 
-# attribution to UC Berkeley, including a link to 
+# Licensing Information:  You are free to use or extend these projects for
+# educational purposes provided that (1) you do not distribute or publish
+# solutions, (2) you retain this notice, and (3) you provide clear
+# attribution to UC Berkeley, including a link to
 # http://inst.eecs.berkeley.edu/~cs188/pacman/pacman.html
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
-# The core projects and autograders were primarily created by John DeNero 
+# The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# Student side autograding was added by Brad Miller, Nick Hay, and 
+# Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
@@ -71,41 +71,72 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
-    """
-    Search the deepest nodes in the search tree first.
+    # Containers to hold closed states, open states, and paths to those states
+    closedStates = []
+    openStates = util.Stack()
+    openPaths = util.Stack()
 
-    Your search algorithm needs to return a list of actions that reaches the
-    goal. Make sure to implement a graph search algorithm.
+    # Add the root node to the open states set and the way to get there to the
+    # open paths set
+    openStates.push(problem.getStartState())
+    openPaths.push([])
 
-    To get started, you might want to try some of these simple commands to
-    understand the search problem that is being passed in:
+    # Depth first search algorithm
+    while not openStates.isEmpty():
+        # Get the next state
+        currentState = openStates.pop()
+        currentPath = openPaths.pop()
 
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+        # Add the state to the set of closed states
+        closedStates.append(currentState)
+
+        if problem.isGoalState(currentState):
+            # If the state is the goal state, return the path to it
+            return currentPath
+        else:
+            # Otherwise, expand its children
+            children = problem.getSuccessors(currentState)
+            for child in children:
+                childState, childAction, childCost = child
+
+                # If a child is already in the open states or closed states
+                # sets, do not add it to the open states
+                if childState in closedStates or childState in openStates.list:
+                    continue
+
+                # The path to the child is the path to the parent plus the
+                # action to get to the child from the parent
+                childPath = currentPath[:]
+                childPath.append(childAction)
+
+                # Add the child state and its path to their respective sets
+                openStates.push(childState)
+                openPaths.push(childPath)
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def nullHeuristic(state, problem=None):
     """
-    A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
+    A heuristic function estimates the cost from the current state to the
+    nearest goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
+
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
