@@ -151,7 +151,7 @@ public class gacircle {
 			double maxRadius = expandCircle(S.get(i), G[0]);
 			for (int j = 1; j < 5; ++j) {
 				double currentMax = expandCircle(S.get(i), G[j]);
-				if (currentMax > maxRadius) maxRadius = currentMax;
+				if (currentMax < maxRadius) maxRadius = currentMax;
 			}
 
 			// Bounds checking so that the circle cannot have a radius
