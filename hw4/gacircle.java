@@ -149,4 +149,37 @@ public class gacircle {
 			System.out.println(pop.get(i).X_location+" , " + pop.get(i).Y_location+" , " +pop.get(i).radius);
 		}
 	}
+
+	/* Implement undefined functions to complete Genetic Algorithm */
+
+	// Update the radius (fitness) of each individual
+	public static void eval_fitness(ArrayList<gacircle> S, gacircle[] G) {
+		for (int i = 0; i < S.size(); ++i) {
+			double maxRadius = expandCircle(S.get(i), g[0]);
+			for (int j = 1; j < 5; ++j) {
+				double currentMax = expandCircle(S.get(i), gacircle[j]);
+				if (currentMax > maxRadius) maxRadius = currentMax;
+			}
+			S.get(i).radius = maxRadius;
+		}
+	}
+
+	// Returns the maximum radius the circle to be extended can have without
+	// intersecting the fixed circle
+	public static double expandCircle(gacircle expand, gacircle fixed) {
+		double circleDistance = pythagoreanDistance(expand, fixed);
+		if (circleDistance <= fixed.radius) {
+			return 0;
+		} else {
+			return circleDistance - fixed.radius;
+		}
+	}
+
+	// Returns the pythagorean distance between two circles
+	public static double pythagoreanDistance(gacircle A, gacircle B) {
+		return Math.sqrt(
+			Math.pow(Math.abs(A.X_location - B.X_location), 2) +
+			Math.pow(Math.abs(A.Y_location - B.Y_location), 2)
+		);
+	}
 }
