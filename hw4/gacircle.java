@@ -196,7 +196,8 @@ public class gacircle {
 			return probability.nextInt() % S.size();
 		}
 
-		int value = probability.nextInt() % sum;
+		int value = Math.abs(probability.nextInt() % sum);
+		if (value == 0) return 0;
 		int selection = -1;
 		while (value > 0) {
 			++selection;
