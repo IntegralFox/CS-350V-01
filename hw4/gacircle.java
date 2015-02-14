@@ -211,7 +211,7 @@ public class gacircle {
 		Random prob = new Random();
 		double fraction = prob.nextGaussian();
 		double inverseFraction = 1 - fraction;
-		gacircle c;
+		gacircle c = new gacircle(0, 0, 0, 0);
 		c.X_location = fraction * p.X_location + inverseFraction * o.X_location;
 		c.Y_location = fraction * p.Y_location + inverseFraction * o.Y_location;
 		return c;
@@ -228,5 +228,18 @@ public class gacircle {
 		if (individual.X_location > 10) individual.X_location = 10;
 		if (individual.Y_location < 0) individual.Y_location = 0;
 		if (individual.Y_location > 10) individual.Y_location = 10;
+	}
+
+	// Returns the fittest individual in the population
+	public static int answersofar(ArrayList<gacircle> S, gacircle[] G) {
+		int fittest = 0;
+		double fitness = S.get(0).radius;
+		for (int i = 1; i < S.size(); ++i) {
+			if (S.get(i).radius > fitness) {
+				fittest = i;
+				fitness = S.get(i).radius;
+			}
+		}
+		return fittest;
 	}
 }
