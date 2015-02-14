@@ -156,10 +156,10 @@ public class gacircle {
 
 			// Bounds checking so that the circle cannot have a radius
 			// that puts it ouside the box
-			if (maxRadius > 10 - S.get(i).X_Location) maxRadius = 10 - S.get(i).X_Location;
-			if (maxRadius > S.get(i).X_Location) maxRadius = S.get(i).X_Location;
-			if (maxRadius > 10 - S.get(i).Y_Location) maxRadius = 10 - S.get(i).Y_Location;
-			if (maxRadius > S.get(i).Y_Location) maxRadius = S.get(i).Y_Location;
+			if (maxRadius > 10 - S.get(i).X_location) maxRadius = 10 - S.get(i).X_location;
+			if (maxRadius > S.get(i).X_location) maxRadius = S.get(i).X_location;
+			if (maxRadius > 10 - S.get(i).Y_location) maxRadius = 10 - S.get(i).Y_location;
+			if (maxRadius > S.get(i).Y_location) maxRadius = S.get(i).Y_location;
 
 			S.get(i).radius = maxRadius;
 		}
@@ -204,5 +204,16 @@ public class gacircle {
 		}
 
 		return selection;
+	}
+
+	// Creates a new child from two parents
+	public static gacircle crossover(gacircle p, gacircle o) {
+		Random prob = new Random();
+		double fraction = prob.nextGaussian();
+		double inverseFraction = 1 - fraction;
+		gacircle c;
+		c.X_location = fraction * p.X_location + inverseFraction * o.X_location;
+		c.Y_location = fraction * p.Y_location + inverseFraction * o.Y_location;
+		return c;
 	}
 }
