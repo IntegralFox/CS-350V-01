@@ -216,4 +216,17 @@ public class gacircle {
 		c.Y_location = fraction * p.Y_location + inverseFraction * o.Y_location;
 		return c;
 	}
+
+	// Mutates a child by adjusting its location by a small random amount
+	public static void mutate(gacircle individual) {
+		Random prob = new Random();
+		individual.X_location += prob.nextGaussian(); // Normally distributed value between 0 and 1
+		individual.X_location -= prob.nextGaussian();
+		individual.Y_location += prob.nextGaussian();
+		individual.Y_location -= prob.nextGaussian();
+		if (individual.X_location < 0) individual.X_location = 0;
+		if (individual.X_location > 10) individual.X_location = 10;
+		if (individual.Y_location < 0) individual.Y_location = 0;
+		if (individual.Y_location > 10) individual.Y_location = 10;
+	}
 }
