@@ -184,12 +184,17 @@ public class gacircle {
 			sum += S.get(i).radius;
 		}
 
+		if (sum == 0) {
+			return probability.nextInt() % S.size();
+		}
+
 		int value = probability.nextInt() % sum;
 		int selection = -1;
 		while (value > 0) {
 			++selection;
 			value -= S.get(selection).radius;
 		}
+
 		return selection;
 	}
 }
