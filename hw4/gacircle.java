@@ -18,7 +18,7 @@ public class gacircle {
 	double radius; // This is the fitness of the individual
 	double selection; // (optional) used for roullete wheel selection
 
-	// this is used to create a new instance of gacircle******************************************************************************************
+	// this is used to create a new instance of gacircle
 	public gacircle(double x,double y, double r, double s) {
 		X_location = x;
 		Y_location = y;
@@ -37,9 +37,6 @@ public class gacircle {
 		while (count < 1000) { // maximum iteration is set to 1000
 			// evaluate the fitness of the population in S
 			eval_fitness(S,G);
-
-			// create the roullete wheel for the population in S
-			roullete(S);
 
 			// select the father and the mother (parents)
 			int f = select(S);
@@ -61,7 +58,6 @@ public class gacircle {
 				current_generation++;
 
 				eval_fitness(S,G);
-				roullete(S);
 			}
 
 			// get the best answer so far
@@ -119,9 +115,6 @@ public class gacircle {
 		// Update the fitness of the population
 		eval_fitness(pop,G);
 
-		// Create the slots for roullete wheel selection
-		roullete(pop);
-
 		// Splat object for drawing circle
 		Splat sp1 = new Splat();
 
@@ -155,9 +148,9 @@ public class gacircle {
 	// Update the radius (fitness) of each individual
 	public static void eval_fitness(ArrayList<gacircle> S, gacircle[] G) {
 		for (int i = 0; i < S.size(); ++i) {
-			double maxRadius = expandCircle(S.get(i), g[0]);
+			double maxRadius = expandCircle(S.get(i), G[0]);
 			for (int j = 1; j < 5; ++j) {
-				double currentMax = expandCircle(S.get(i), gacircle[j]);
+				double currentMax = expandCircle(S.get(i), G[j]);
 				if (currentMax > maxRadius) maxRadius = currentMax;
 			}
 			S.get(i).radius = maxRadius;
@@ -181,5 +174,22 @@ public class gacircle {
 			Math.pow(Math.abs(A.X_location - B.X_location), 2) +
 			Math.pow(Math.abs(A.Y_location - B.Y_location), 2)
 		);
+	}
+
+	// Returns a selection from the population using a Roulette Wheel method
+	public static int select(ArrayList<gacircle> S) {
+		Random probability = new Random();
+		int sum = 0;
+		for (int i = 0; i < S.size(); ++i) {
+			sum += S.get(i).radius;
+		}
+
+		int value = probability.nextInt() % sum;
+		int selection = -1;
+		while (value > 0) {
+			++selection;
+			value -= S.get(selection).radius;
+		}
+		return selection;
 	}
 }
