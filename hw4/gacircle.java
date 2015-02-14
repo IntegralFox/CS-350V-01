@@ -153,6 +153,14 @@ public class gacircle {
 				double currentMax = expandCircle(S.get(i), G[j]);
 				if (currentMax > maxRadius) maxRadius = currentMax;
 			}
+
+			// Bounds checking so that the circle cannot have a radius
+			// that puts it ouside the box
+			if (maxRadius > 10 - S.get(i).X_Location) maxRadius = 10 - S.get(i).X_Location;
+			if (maxRadius > S.get(i).X_Location) maxRadius = S.get(i).X_Location;
+			if (maxRadius > 10 - S.get(i).Y_Location) maxRadius = 10 - S.get(i).Y_Location;
+			if (maxRadius > S.get(i).Y_Location) maxRadius = S.get(i).Y_Location;
+
 			S.get(i).radius = maxRadius;
 		}
 	}
