@@ -15,9 +15,14 @@ class Chromosome implements Comparable<Chromosome> {
 	private static final char[] OPERATORS = { '&', '|' };
 
 	/* Member variables */
-	public Double fitness;
-	public Double netGain;
-	public StringBuilder representation;
+	private Double fitness;
+	private Double netGain;
+	private StringBuilder representation;
+
+	/* Getter Methods */
+	public Double getFitness() { return fitness; }
+	public Double getNetGain() { return netGain; }
+	public StringBuilder getRepresentation() { return representation; }
 
 	/* Constructors */
 	public Chromosome() {
