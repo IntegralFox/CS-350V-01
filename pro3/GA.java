@@ -1,7 +1,7 @@
 /* Genetic Algorithm class to contain the population during evolution */
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.Collections;
 import java.util.Random;
 
 class GA {
@@ -12,18 +12,25 @@ class GA {
 	private static final Integer POPULATION_SIZE = 20;
 
 	/* Member Variables */
-	private PriorityQueue<Chromosome> population;
+	private ArrayList<Chromosome> population;
 	private ArrayList<Double> stockHistory;
+	private Double populationFitnessSum;
 
 	/* Constructors */
 	public GA(ArrayList<Double> sh) {
 		stockHistory = sh;
+		populationFitnessSum = 0;
 
 		/* Create the initial random population */
 		for (int i = 0; i < POPULATION_SIZE; ++i) {
 			Chromosome individual = new Chromosome();
 			individual.calculateFitnessWith(stockHistory);
 			population.add(individual);
+			populationFitnessSum += individual.fitness;
 		}
+
+		/* Sort the populatin in descending order using the Collections' reverse
+		 * order comparator */
+		Collections.sort(population, Collections.reverseOrder());
 	}
 }
