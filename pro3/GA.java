@@ -16,7 +16,7 @@ class GA {
 	private ArrayList<Double> stockHistory;
 	private Double populationFitnessSum;
 
-	/* Constructors */
+	/* Constructor */
 	public GA(ArrayList<Double> sh) {
 		stockHistory = sh;
 		populationFitnessSum = 0;
@@ -32,5 +32,20 @@ class GA {
 		/* Sort the populatin in descending order using the Collections' reverse
 		 * order comparator */
 		Collections.sort(population, Collections.reverseOrder());
+	}
+
+	/* Member Methods */
+	public StringBuilder rouletteSelect() {
+		Double ball = prng.nextDouble() * populationFitnessSum;
+		Iterator<Chromosome> populationIterator = population.listIterator();
+		Chromosome currentIndividual = populationIterator.next();
+
+		/* Subtrack fitnesses until the ball "lands" on an individual */
+		while (ball - currentIndividual.fitness > 0 && populationIterator.hasNext()) {
+			ball -= currentIndividual.fitness;
+			currentIndividual = populationIterator.next();
+		}
+
+		return currentIndividual.representation;
 	}
 }
