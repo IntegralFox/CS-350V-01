@@ -21,7 +21,7 @@ class Chromosome implements Comparable<Chromosome> {
 
 	/* Constructors */
 	public Chromosome() {
-		representation = new StringBuilder(randomIndividual());
+		representation = randomIndividual();
 	}
 
 	public Chromosome(StringBuilder r) {
@@ -43,7 +43,7 @@ class Chromosome implements Comparable<Chromosome> {
 	}
 
 	/* Creates a random individual representation */
-	public static String randomIndividual() {
+	public static StringBuilder randomIndividual() {
 		StringBuilder r = new StringBuilder();
 
 		/* Create a random chromosome by randomly choosing values for each
@@ -55,13 +55,13 @@ class Chromosome implements Comparable<Chromosome> {
 		}
 
 		/* Remove extraneous beginning operators */
-		return r.substring(1);
+		return new StringBuilder(r.substring(1));
 	}
 
 	/* Comparable Implementation for priority queue */
 	public int compareTo(Chromosome m) {
 		if (m == null) throw new NullPointerException("Attempted to compare with a null chromosome.");
-		if (fitness == null || m.fitness == null) throw new NullPointerException("Fitness of a compared chromosome is null. Did you forget Chromosome::calculateFitness?");
+		if (fitness == null || m.fitness == null) throw new NullPointerException("Fitness of a compared chromosome is null. Did you forget Chromosome::calculateFitnessWith?");
 		if (fitness < m.fitness) return -1;
 		else if (fitness == m.fitness) return 0;
 		else return 1;
