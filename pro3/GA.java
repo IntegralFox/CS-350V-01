@@ -38,14 +38,55 @@ class GA {
 
 	/* Member Methods */
 	public void evolve() {
+		/* Produce N Generations */
+		for (int generation = 0; generation < NUM_GENERATIONS; ++generation) {
+			/* Select two parents */
+			StringBuilder mother = rouletteSelectParent();
+			StringBuilder father = rouletteSelectParent();
 
+			/* Select a crossover point in the range [1,13] */
+			Integer crossoverIndex = prng.nextInt(13) + 1;
+
+			/* Produce two children with crossover */
+			Chromosome daughter = crossParents(mother, father, crossoverIndex);
+			Chromosome son = crossParents(father, mother, crossoverIndex);
+
+			/* Apply random mutation */
+			daughter.mutate();
+			son.mutate();
+
+			/* Calculate the fitness of the children */
+			daughter.calculateFitnessWith(stockHistory);
+			son.calculateFitnessWith(stockHistory);
+
+			/* Add childrent to population and update the fitness sum */
+			population.add(daughter);
+			population.add(son);
+			populationFitnessSum += daughter.getFitness();
+			populationFitnessSum += son.getFitness();
+
+			/* Remove the two least fit individuals and remove their fitnesses
+			 * from the population fitness sum */
+			Collections.sort(population);
+			populationFitnessSum -= population.remove(0).getFitness();
+			populationFitnessSum -= population.remove(0).getFitness();
+			Collections.reverse(population);
+		}
+	}
+
+	public Chromosome crossParents(StringBuilder a, StringBuilder b, Integer c) {
+		StringBuilder child = new StringBuilder();
+		child.append(a.substring(0, c));
+		child.append(b.substring(c));
+
+		return new Chromosome(child);
 	}
 
 	public Chromosome fittest() {
 		return population.get(0);
 	}
 
-	public StringBuilder rouletteSelect() {
+	public StringBuilder rouletteSelectParent() {
 		Double ball = prng.nextDouble() * populationFitnessSum;
 		ListIterator<Chromosome> populationIterator = population.listIterator();
 		Chromosome currentIndividual = populationIterator.next();
