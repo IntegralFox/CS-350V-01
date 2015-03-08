@@ -3,7 +3,7 @@
 import java.util.Random;
 import java.util.ArrayList;
 
-class Chromosome {
+class Chromosome implements Comparable<Chromosome> {
 	/* PRNG to be used by all the chromosomes */
 	private static final Random prng = new Random();
 
@@ -38,7 +38,7 @@ class Chromosome {
 		}
 	}
 
-	public void calculateFitness(ArrayList<Double> history) {
+	public void calculateFitnessWith(ArrayList<Double> history) {
 
 	}
 
@@ -56,5 +56,14 @@ class Chromosome {
 
 		/* Remove extraneous beginning operators */
 		return r.substring(1);
+	}
+
+	/* Comparable Implementation for priority queue */
+	public int compareTo(Chromosome m) {
+		if (m == null) throw new NullPointerException("Attempted to compare with a null chromosome.");
+		if (fitness == null || m.fitness == null) throw new NullPointerException("Fitness of a compared chromosome is null. Did you forget Chromosome::calculateFitness?");
+		if (fitness < m.fitness) return -1;
+		else if (fitness == m.fitness) return 0;
+		else return 1;
 	}
 }
