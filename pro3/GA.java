@@ -78,7 +78,6 @@ class GA {
 		StringBuilder child = new StringBuilder();
 		child.append(a.substring(0, c));
 		child.append(b.substring(c));
-
 		return new Chromosome(child);
 	}
 
@@ -91,7 +90,7 @@ class GA {
 		ListIterator<Chromosome> populationIterator = population.listIterator();
 		Chromosome currentIndividual = populationIterator.next();
 
-		/* Subtrack fitnesses until the ball "lands" on an individual */
+		/* Subtrack individuals' fitnesses until the ball "lands" on an individual */
 		while (ball - currentIndividual.getFitness() > 0 && populationIterator.hasNext()) {
 			ball -= currentIndividual.getFitness();
 			currentIndividual = populationIterator.next();
