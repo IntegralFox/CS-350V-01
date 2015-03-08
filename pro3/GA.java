@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Random;
 
 class GA {
@@ -10,6 +11,7 @@ class GA {
 
 	/* "Constants" that define the behaviour of chromosomes */
 	private static final Integer POPULATION_SIZE = 20;
+	private static final Integer NUM_GENERATIONS = 200;
 
 	/* Member Variables */
 	private ArrayList<Chromosome> population;
@@ -19,14 +21,14 @@ class GA {
 	/* Constructor */
 	public GA(ArrayList<Double> sh) {
 		stockHistory = sh;
-		populationFitnessSum = 0;
+		populationFitnessSum = 0d;
 
 		/* Create the initial random population */
 		for (int i = 0; i < POPULATION_SIZE; ++i) {
 			Chromosome individual = new Chromosome();
 			individual.calculateFitnessWith(stockHistory);
 			population.add(individual);
-			populationFitnessSum += individual.fitness;
+			populationFitnessSum += individual.getFitness();
 		}
 
 		/* Sort the populatin in descending order using the Collections' reverse
@@ -35,17 +37,25 @@ class GA {
 	}
 
 	/* Member Methods */
+	public void evolve() {
+
+	}
+
+	public Chromosome fittest() {
+		return population.get(0);
+	}
+
 	public StringBuilder rouletteSelect() {
 		Double ball = prng.nextDouble() * populationFitnessSum;
-		Iterator<Chromosome> populationIterator = population.listIterator();
+		ListIterator<Chromosome> populationIterator = population.listIterator();
 		Chromosome currentIndividual = populationIterator.next();
 
 		/* Subtrack fitnesses until the ball "lands" on an individual */
-		while (ball - currentIndividual.fitness > 0 && populationIterator.hasNext()) {
-			ball -= currentIndividual.fitness;
+		while (ball - currentIndividual.getFitness() > 0 && populationIterator.hasNext()) {
+			ball -= currentIndividual.getFitness();
 			currentIndividual = populationIterator.next();
 		}
 
-		return currentIndividual.representation;
+		return currentIndividual.getRepresentation();
 	}
 }
