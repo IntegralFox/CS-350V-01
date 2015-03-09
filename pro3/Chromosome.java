@@ -9,6 +9,7 @@ class Chromosome implements Comparable<Chromosome> {
 
 	/* "Constants" that define the behaviour of chromosomes */
 	private static final Double MUTATION_PROBABILITY = 0.001;
+	private static final Integer NUM_STOCKS = 5;
 	private static final Integer NUM_RULES = 3;
 	private static final Integer NUM_OPERATORS = 2;
 	private static final char[] RULES = { 'm', 's', 'e' };
@@ -45,6 +46,41 @@ class Chromosome implements Comparable<Chromosome> {
 
 	public void calculateFitnessWith(ArrayList<Double> history) {
 
+	}
+
+	private Double ruleEMA(ArrayList<Double> history, Integer current, Integer length) {
+		Double alpha = 1 - (2d / (length + 1));
+		Double numerator = 0d;
+		Double denominator = 0d;
+
+		for (int i = 0; i < length; ++i, current += NUM_STOCKS) {
+			Double alphaPow = Math.pow(alpha, i);
+			numerator += history.get(current) * alphaPow;
+			denominator += alphaPow;
+		}
+
+		return numerator / denominator;
+	}
+
+	private Double ruleSMA(ArrayList<Double> history, Integer current, Integer length) {
+		Double sum = 0d;
+
+		for (int i = 0; i < length; ++i, current += NUM_STOCKS) {
+			sum += history.get(current);
+		}
+
+		return sum / length;
+	}
+
+	private Double ruleMAX(ArrayList<Double> history, Integer current, Integer length) {
+		Double max = history.get(current);
+		current += NUM_STOCKS;
+
+		for (int i = 1; i < length; ++i, current += NUM_STOCKS) {
+			if (max < history.get(current)) max = history.get(current);
+		}
+
+		return max;
 	}
 
 	/* Creates a random individual representation */
