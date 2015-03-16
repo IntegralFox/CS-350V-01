@@ -15,11 +15,11 @@ class GA {
 
 	/* Member Variables */
 	private ArrayList<Chromosome> population;
-	private ArrayList<Double> stockHistory;
+	private ArrayList<ArrayList<Double>> stockHistory;
 	private Double populationFitnessSum;
 
 	/* Constructor */
-	public GA(ArrayList<Double> sh) {
+	public GA(ArrayList<ArrayList<Double>> sh) {
 		stockHistory = sh;
 		populationFitnessSum = 0d;
 
