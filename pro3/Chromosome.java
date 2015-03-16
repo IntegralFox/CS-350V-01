@@ -83,6 +83,25 @@ class Chromosome implements Comparable<Chromosome> {
 		return max;
 	}
 
+	private Double restrictRange(Double preimage) {
+		/* This function maps the domain of all possible net gains for stock
+		 * market trading (-infinity, infinity) to a positive, monotonically
+		 * increasing range that is usable as a fitness for the chromosome
+		 * (0, infinity). */
+		Double image;
+		if (preimage < -1d) {
+			// (-infinity, -1) -> (0, 1)
+			image = -1d / preimage;
+		} else if (preimage > 0d) {
+			// (0, infinity) -> (1, infinity+1)
+			image = preimage + 1d;
+		} else {
+			// [-1, 0] -> {1}
+			image = 1d;
+		}
+		return image;
+	}
+
 	/* Creates a random individual representation */
 	public static StringBuilder randomIndividual() {
 		StringBuilder r = new StringBuilder();
