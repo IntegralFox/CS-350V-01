@@ -13,7 +13,7 @@ class Chromosome implements Comparable<Chromosome> {
 	public static final Integer NUM_STOCKS = 5;
 	private static final Integer NUM_RULES = 3;
 	private static final Integer NUM_OPERATORS = 2;
-	private static final Integer FITNESS_DAYS = 90;
+	private static final Integer FITNESS_DAYS = 30;
 	private static final Double TRANSACTION_COST = 7d;
 	private static final char[] RULES = { 'm', 's', 'e' };
 	private static final char[] OPERATORS = { '&', '|' };
@@ -66,23 +66,28 @@ class Chromosome implements Comparable<Chromosome> {
 					// Sell all shares if it's the last day
 					if (shares[company] > 0) {
 						Integer shareCount = shares[company];
-						account[company] += shareCount * daysClosingPrice;
+						account[company] += shareCount * daysClosingPrice - TRANSACTION_COST;
 						shares[company] -= shareCount;
 					}
 				} else if (ruleSaysBuy(history.get(company), day)) {
 					traded = true;
-					Double buyBudget = account[company] * 0.25d;
+					Double buyBudget = account[company] * 0.25d; // Buy quarter
 					Integer shareCount = new Double(buyBudget / daysClosingPrice).intValue();
+					// Only buy if more is spent on shares then on the transaction cost
 					shares[company] += shareCount;
 					account[company] -= shareCount * daysClosingPrice + TRANSACTION_COST;
 				} else {
-					Integer shareCount = shares[company] / 2; // Sell half
+					Integer shareCount = shares[company] / 4; // Sell quarter
 					if (shareCount < 5) shareCount = shares[company]; // unless we have only 10 shares, then sell all
-					account[company] += shareCount * daysClosingPrice;
+					// Only sell if more is made on the shares then is spent on the transaction cost
+					account[company] += shareCount * daysClosingPrice - TRANSACTION_COST;
 					shares[company] -= shareCount;
 				}
 			}
 		}
+
+		// Penalize individuals that do not trade by half their account balance
+		if (!traded) for (int i = 0; i < NUM_STOCKS; ++i) account[i] /= 2;
 
 		// Add up the gains from the 5 accounts
 		netGain = 0d;
@@ -231,8 +236,6 @@ class Chromosome implements Comparable<Chromosome> {
 	public int compareTo(Chromosome m) {
 		if (m == null) throw new NullPointerException("Attempted to compare with a null chromosome.");
 		if (fitness == null || m.fitness == null) throw new NullPointerException("Fitness of a compared chromosome is null. Did you forget Chromosome::calculateFitnessWith?");
-		if (fitness < m.fitness) return -1;
-		else if (fitness == m.fitness) return 0;
-		else return 1;
+		return fitness.compareTo(m.fitness);
 	}
 }

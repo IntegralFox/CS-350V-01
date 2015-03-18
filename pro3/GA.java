@@ -69,8 +69,8 @@ class GA {
 			/* Remove the two least fit individuals and remove their fitnesses
 			 * from the population fitness sum */
 			Collections.sort(population);
-			populationFitnessSum -= population.remove(0).getFitness();
-			populationFitnessSum -= population.remove(0).getFitness();
+		//	populationFitnessSum -= population.remove(0).getFitness();
+		//	populationFitnessSum -= population.remove(0).getFitness();
 			Collections.reverse(population);
 
 			if (generation % 10 == 0) {
