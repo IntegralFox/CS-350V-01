@@ -85,7 +85,7 @@ class Chromosome implements Comparable<Chromosome> {
 		}
 
 		// Add up the gains from the 5 accounts
-		Double netGain = 0d;
+		netGain = 0d;
 		for (int i = 0; i < NUM_STOCKS; ++i) netGain += account[i] - INITIAL_ACCOUNT_BALANCE;
 
 		// Convert net gain to a positive monotonic fitness
@@ -183,8 +183,7 @@ class Chromosome implements Comparable<Chromosome> {
 	}
 
 	private Double ruleMAX(ArrayList<Double> history, Integer current, Integer length) {
-		Double max = history.get(current);
-		current += NUM_STOCKS;
+		Double max = history.get(current++);
 
 		for (int i = 1; i < length; ++i, ++current) {
 			if (max < history.get(current)) max = history.get(current);

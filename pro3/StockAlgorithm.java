@@ -42,7 +42,12 @@ class StockAlgorithm {
 
 		/* Output the solution */
 		Chromosome solution = solver.fittest();
-		System.out.println("Best rule found: " + solution.getRepresentation());
-		System.out.println("Net gain: $" + solution.getNetGain());
+
+		// ANSI control sequence interrupt to clear the terminal and reset the cursor position
+		// http://en.wikipedia.org/wiki/ANSI_escape_code
+		System.out.print("\33[H\33[J");
+		System.out.print("Evolving Population [####################] 100%");
+		System.out.println("\n\n\nBest rule found: " + solution.getRepresentation());
+		System.out.println("Net gain: " + String.format("$%.2f", solution.getNetGain()));
 	}
 }

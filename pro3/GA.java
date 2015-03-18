@@ -20,6 +20,7 @@ class GA {
 
 	/* Constructor */
 	public GA(ArrayList<ArrayList<Double>> sh) {
+		population = new ArrayList<Chromosome>();
 		stockHistory = sh;
 		populationFitnessSum = 0d;
 
@@ -71,6 +72,24 @@ class GA {
 			populationFitnessSum -= population.remove(0).getFitness();
 			populationFitnessSum -= population.remove(0).getFitness();
 			Collections.reverse(population);
+
+			if (generation % 10 == 0) {
+				// ANSI control sequence interrupt to clear the terminal and reset the cursor position
+				// http://en.wikipedia.org/wiki/ANSI_escape_code
+				System.out.print("\33[H\33[J");
+				System.out.print("Evolving Population [");
+				for (int i = 0; i < 20; ++i) System.out.print(i < generation*20/NUM_GENERATIONS ? "#" : "-");
+				System.out.print(String.format("] %3d%%", generation * 100 / NUM_GENERATIONS));
+
+				// Ouput information about this generation
+				System.out.println("\n\n\nFittest individuals:");
+				for (int i = 0; i < 5; ++i) {
+					Chromosome individual = population.get(i);
+					System.out.print(individual.getRepresentation());
+					System.out.print(" net: " + String.format("$%.2f", individual.getNetGain()));
+					System.out.println("   fitness: " + String.format("%.0f", individual.getFitness()));
+				}
+			}
 		}
 	}
 
