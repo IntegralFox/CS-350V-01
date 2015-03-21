@@ -28,7 +28,7 @@ class StockAlgorithm {
 		/* Read in the CSV into a 2D array of doubles */
 		ArrayList<ArrayList<Double>> stockHistory = new ArrayList<ArrayList<Double>>();
 		for (Integer i = 0; i < Chromosome.NUM_STOCKS; ++i) stockHistory.add(new ArrayList<Double>());
-		String line;
+		String line = stockHistoryCSV.readLine();
 		while ((line = stockHistoryCSV.readLine()) != null) {
 			String[] values = line.split(",");
 			for (int i = 0; i < Chromosome.NUM_STOCKS; ++i) {
