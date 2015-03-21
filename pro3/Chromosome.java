@@ -14,7 +14,7 @@ class Chromosome implements Comparable<Chromosome> {
 	private static final Integer NUM_RULES = 3;
 	private static final Integer NUM_OPERATORS = 2;
 	private static final Integer FITNESS_DAYS = 30;
-	private static final Double TRANSACTION_COST = 7d;
+	public static final Double TRANSACTION_COST = 7d;
 	private static final char[] RULES = { 'm', 's', 'e' };
 	private static final char[] OPERATORS = { '&', '|' };
 
