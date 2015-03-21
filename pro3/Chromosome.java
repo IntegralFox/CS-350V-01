@@ -69,17 +69,15 @@ class Chromosome implements Comparable<Chromosome> {
 						account[company] += shareCount * daysClosingPrice - TRANSACTION_COST;
 						shares[company] -= shareCount;
 					}
-				} else if (ruleSaysBuy(history.get(company), day)) {
+				} else if (ruleSaysBuy(representation, history.get(company), day)) {
 					traded = true;
 					Double buyBudget = account[company] * 0.25d; // Buy quarter
 					Integer shareCount = new Double(buyBudget / daysClosingPrice).intValue();
-					// Only buy if more is spent on shares then on the transaction cost
 					shares[company] += shareCount;
 					account[company] -= shareCount * daysClosingPrice + TRANSACTION_COST;
 				} else {
 					Integer shareCount = shares[company] / 4; // Sell quarter
 					if (shareCount < 5) shareCount = shares[company]; // unless we have only 10 shares, then sell all
-					// Only sell if more is made on the shares then is spent on the transaction cost
 					account[company] += shareCount * daysClosingPrice - TRANSACTION_COST;
 					shares[company] -= shareCount;
 				}
@@ -97,7 +95,7 @@ class Chromosome implements Comparable<Chromosome> {
 		fitness = restrictRange(netGain);
 	}
 
-	private boolean ruleSaysBuy(ArrayList<Double> history, Integer day) {
+	public static boolean ruleSaysBuy(StringBuilder representation, ArrayList<Double> history, Integer day) {
 		boolean buy;
 		Double closingPrice = history.get(day);
 
@@ -163,7 +161,7 @@ class Chromosome implements Comparable<Chromosome> {
 		return buy;
 	};
 
-	private Double ruleEMA(ArrayList<Double> history, Integer current, Integer length) {
+	public static Double ruleEMA(ArrayList<Double> history, Integer current, Integer length) {
 		Double alpha = 1 - (2d / (length + 1));
 		Double numerator = 0d;
 		Double denominator = 0d;
@@ -177,7 +175,7 @@ class Chromosome implements Comparable<Chromosome> {
 		return numerator / denominator;
 	}
 
-	private Double ruleSMA(ArrayList<Double> history, Integer current, Integer length) {
+	public static Double ruleSMA(ArrayList<Double> history, Integer current, Integer length) {
 		Double sum = 0d;
 
 		for (int i = 0; i < length; ++i, ++current) {
@@ -187,7 +185,7 @@ class Chromosome implements Comparable<Chromosome> {
 		return sum / length;
 	}
 
-	private Double ruleMAX(ArrayList<Double> history, Integer current, Integer length) {
+	public static Double ruleMAX(ArrayList<Double> history, Integer current, Integer length) {
 		Double max = history.get(current++);
 
 		for (int i = 1; i < length; ++i, ++current) {
