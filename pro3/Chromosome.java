@@ -13,7 +13,8 @@ class Chromosome implements Comparable<Chromosome> {
 	public static final Integer NUM_STOCKS = 5;
 	private static final Integer NUM_RULES = 3;
 	private static final Integer NUM_OPERATORS = 2;
-	private static final Integer FITNESS_DAYS = 30;
+	public static Integer FITNESS_DAYS = 60;
+	public static Integer FITNESS_OFFSET = 0;
 	public static final Double TRANSACTION_COST = 7d;
 	private static final char[] RULES = { 'm', 's', 'e' };
 	private static final char[] OPERATORS = { '&', '|' };
@@ -59,10 +60,10 @@ class Chromosome implements Comparable<Chromosome> {
 		}
 
 		// Loop for a specified number of days, trading shares based on the rule
-		for (int day = history.get(0).size() - FITNESS_DAYS - 1; day < history.get(0).size(); ++day) {
+		for (int day = FITNESS_DAYS + FITNESS_OFFSET; day >= FITNESS_OFFSET; --day) {
 			for (int company = 0; company < NUM_STOCKS; ++company) {
 				Double daysClosingPrice = history.get(company).get(day);
-				if (day == history.get(0).size() - 1) {
+				if (day == 0) {
 					// Sell all shares if it's the last day
 					if (shares[company] > 0) {
 						Integer shareCount = shares[company];
@@ -101,7 +102,7 @@ class Chromosome implements Comparable<Chromosome> {
 
 		// Get the characteristics of the first rule in the set
 		Integer length = new Integer(representation.substring(1, 4));
-		Integer startDay = day - length - 1;
+		Integer startDay = day + 1;
 		String op = representation.substring(0, 1);
 
 		if (op.equals("e")) {
@@ -114,7 +115,6 @@ class Chromosome implements Comparable<Chromosome> {
 
 		// Get the characteristics of the second rule in the set
 		length = new Integer(representation.substring(6, 9));
-		startDay = day - length - 1;
 		op = representation.substring(5, 6);
 
 		if (representation.substring(4, 5).equals("&")) {
@@ -137,7 +137,6 @@ class Chromosome implements Comparable<Chromosome> {
 
 		// Get the characteristics of the third rule in the set
 		length = new Integer(representation.substring(11));
-		startDay = day - length - 1;
 		op = representation.substring(10, 11);
 
 		if (representation.substring(9, 10).equals("&")) {

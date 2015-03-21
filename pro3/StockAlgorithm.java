@@ -11,9 +11,12 @@ class StockAlgorithm {
 	public static void main(String[] args) throws IOException {
 		/* Error if no csv file was provided */
 		if (args.length == 0) {
-			System.out.println("StockAlgorithm: Usage: java StockAlgorithm <stock_csv_file>");
+			System.out.println("StockAlgorithm: Usage: java StockAlgorithm <stock_csv_file> [day_offset] [evaluation_length]");
 			return;
 		}
+
+		if (args.length > 1) Chromosome.FITNESS_OFFSET = new Integer(args[1]);
+		if (args.length > 2) Chromosome.FITNESS_DAYS = new Integer(args[2]);
 
 		/* Create a BufferedReader with the file */
 		BufferedReader stockHistoryCSV;
