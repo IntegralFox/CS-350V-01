@@ -71,16 +71,22 @@ class Chromosome implements Comparable<Chromosome> {
 						shares[company] -= shareCount;
 					}
 				} else if (ruleSaysBuy(representation, history.get(company), day)) {
-					traded = true;
 					Double buyBudget = account[company] * 0.25d; // Buy quarter
 					Integer shareCount = new Double(buyBudget / daysClosingPrice).intValue();
-					shares[company] += shareCount;
-					account[company] -= shareCount * daysClosingPrice + TRANSACTION_COST;
+					if (shareCount * daysClosingPrice > TRANSACTION_COST) {
+						// Only buy if more is spent on stocks than on transaction costs
+						traded = true;
+						shares[company] += shareCount;
+						account[company] -= shareCount * daysClosingPrice + TRANSACTION_COST;
+					}
 				} else {
 					Integer shareCount = shares[company] / 4; // Sell quarter
 					if (shareCount < 5) shareCount = shares[company]; // unless we have only 10 shares, then sell all
-					account[company] += shareCount * daysClosingPrice - TRANSACTION_COST;
-					shares[company] -= shareCount;
+					if (shareCount * daysClosingPrice > TRANSACTION_COST) {
+						// Only sell if enough is made to cover transaction costs
+						account[company] += shareCount * daysClosingPrice - TRANSACTION_COST;
+						shares[company] -= shareCount;
+					}
 				}
 			}
 		}

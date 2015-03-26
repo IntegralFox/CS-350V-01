@@ -67,12 +67,6 @@ class Experiment {
 			}
 		}
 
-		experiment1();
-
-		resultFile.flush();
-	}
-
-	static void experiment1() {
 		Double mean = 0d;
 		// Evaluate Chromosome
 		resultFile.write(chromosome + ",");
@@ -100,6 +94,8 @@ class Experiment {
 			mean /= stockHistory.size();
 			resultFile.write(" " + String.format("$%.2f", mean) + ",\n");
 		}
+
+		resultFile.flush();
 	}
 
 	static Double calculateNetGain(StringBuilder chromosome, ArrayList<Double> history) {
@@ -119,13 +115,19 @@ class Experiment {
 				} else if (Chromosome.ruleSaysBuy(chromosome, history, day)) {
 					Double buyBudget = account * 0.25d; // Buy quarter
 					Integer shareCount = new Double(buyBudget / daysClosingPrice).intValue();
-					shares += shareCount;
-					account -= shareCount * daysClosingPrice + Chromosome.TRANSACTION_COST;
+					if (shareCount * daysClosingPrice > Chromosome.TRANSACTION_COST) {
+						// Only buy if more is spent on stocks than on transaction costs
+						shares += shareCount;
+						account -= shareCount * daysClosingPrice + Chromosome.TRANSACTION_COST;
+					}
 				} else {
 					Integer shareCount = shares / 4; // Sell quarter
 					if (shareCount < 5) shareCount = shares; // unless we have only 10 shares, then sell all
-					account += shareCount * daysClosingPrice - Chromosome.TRANSACTION_COST;
-					shares -= shareCount;
+					if (shareCount * daysClosingPrice > Chromosome.TRANSACTION_COST) {
+						// Only sell if enough is made to cover transaction costs
+						account += shareCount * daysClosingPrice - Chromosome.TRANSACTION_COST;
+						shares -= shareCount;
+					}
 				}
 		}
 
