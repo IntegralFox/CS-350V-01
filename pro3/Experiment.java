@@ -67,6 +67,11 @@ class Experiment {
 			}
 		}
 
+		if (stockHistory.get(0).size() - EVALUATION_PERIOD < 999) {
+			System.out.println("Experiment: " + csvFilePath + ": Stock history not long enough to test the full range of a chromosome for the specified period");
+			return;
+		}
+
 		Double mean = 0d;
 		// Evaluate Chromosome
 		resultFile.write(chromosome + ",");

@@ -39,6 +39,11 @@ class StockAlgorithm {
 			}
 		}
 
+		if (stockHistory.get(0).size() - Chromosome.FITNESS_DAYS - Chromosome.FITNESS_OFFSET < 999) {
+			System.out.println("StockAlgorithm: " + args[0] + ": Stock history not long enough to test the full range of a chromosome for the specified period");
+			return;
+		}
+
 		/* Create a Genetic Algorithm object and evolve an answer */
 		GA solver = new GA(stockHistory);
 		solver.evolve();
