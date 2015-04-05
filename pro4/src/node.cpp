@@ -12,6 +12,18 @@ Node::Node(const std::set<std::string>& parents) {
 	}
 }
 
+Node& Node::operator=(const Node& n) {
+	parents = n.parents;
+	CPT = n.CPT;
+	return *this;
+}
+
+Node& Node::operator=(Node&& n) {
+	parents = std::move(n.parents);
+	CPT = std::move(n.CPT);
+	return *this;
+}
+
 void Node::setTableValue(const double probability) {
 	CPT[0] = probability;
 }
