@@ -1,6 +1,6 @@
 CC=clang++
-CFLAGS=-c -Wall
-LFLAGS=-o bin/probability
+CFLAGS=-std=c++11 -c -Wall
+LFLAGS=-std=c++11 -o bin/probability
 
 all: bin obj bin/probability
 
