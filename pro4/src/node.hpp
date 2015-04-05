@@ -21,8 +21,10 @@ public:
 	// Constructs a new node given a set of parent identifiers
 	Node(const std::set<std::string>&);
 	// Set the value of a conditional probability
+	void setTableValue(const double);
 	void setTableValue(const std::map<std::string, bool>&, const double);
 	// Get the value of a conditional probability
+	double getTableValue(const bool);
 	double getTableValue(const bool, const std::map<std::string, bool>&);
 };
 
