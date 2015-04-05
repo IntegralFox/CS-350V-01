@@ -23,7 +23,7 @@ public:
 	Node();
 
 	// Constructs a new node given a set of parent identifiers
-	Node(const std::set<std::string>&);
+	Node(const std::initializer_list<std::string>&);
 
 	// Copy and Move constructor
 	Node(const Node& n) : parents(n.parents), CPT(n.CPT) {};

@@ -4,7 +4,7 @@ Node::Node() {
 	// Nothing to see here
 }
 
-Node::Node(const std::set<std::string>& parents) {
+Node::Node(const std::initializer_list<std::string>& parents) {
 	int offset = 1;
 	for (const auto& p : parents) {
 		this->parents[p] = offset;
