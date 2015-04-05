@@ -19,6 +19,7 @@ class Node {
 
 public:
 	// Constructs a new node given a set of parent identifiers
+	Node();
 	Node(const std::set<std::string>&);
 	// Set the value of a conditional probability
 	void setTableValue(const double);

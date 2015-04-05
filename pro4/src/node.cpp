@@ -1,5 +1,9 @@
 #include "node.hpp"
 
+Node::Node() {
+	// Nothing to see here
+}
+
 Node::Node(const std::set<std::string>& parents) {
 	int offset = 1;
 	for (const auto& p : parents) {
