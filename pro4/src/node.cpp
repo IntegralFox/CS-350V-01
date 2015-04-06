@@ -1,7 +1,8 @@
 #include "node.hpp"
+#include <iostream>
 
 Node::Node() {
-	// Nothing to see here
+	CPT.reserve(1);
 }
 
 Node::Node(const std::initializer_list<std::string>& parents) {
@@ -10,6 +11,7 @@ Node::Node(const std::initializer_list<std::string>& parents) {
 		this->parents[p] = offset;
 		offset *= 2;
 	}
+	CPT.reserve(offset);
 }
 
 Node& Node::operator=(const Node& n) {
@@ -31,7 +33,11 @@ void Node::setTableValue(const double probability) {
 void Node::setTableValue(const std::map<std::string, bool>& parentValues, const double probability) {
 	int index = 0;
 	for (const auto& p : parentValues) {
-		if (!p.second) index += parents.at(p.first);
+		try {
+			if (!p.second) index += parents.at(p.first);
+		} catch (std::exception& e) {
+			throw new std::out_of_range {"Node has no parent called " + p.first};
+		}
 	}
 	CPT[index] = probability;
 }
@@ -43,7 +49,11 @@ double Node::getTableValue(const bool nodeValue) {
 double Node::getTableValue(const bool nodeValue, const std::map<std::string, bool>& parentValues) {
 	int index = 0;
 	for (const auto& p : parentValues) {
-		if (!p.second) index += parents.at(p.first);
+		try {
+			if (!p.second) index += parents.at(p.first);
+		} catch (std::exception& e) {
+			throw new std::out_of_range {"Node has no parent called " + p.first};
+		}
 	}
 	return nodeValue ? CPT[index] : 1 - CPT[index];
 }
