@@ -17,11 +17,11 @@ BN::BN() {
 	cancer.setTableValue(condition, 0.95);
 	condition["pollution"] = false;
 	cancer.setTableValue(condition, 0.3);
-	condition["cancer"] = false;
+	condition["smoker"] = false;
 	cancer.setTableValue(condition, 0.001);
 	condition["pollution"] = true;
 	cancer.setTableValue(condition, 0.2);
-	network["cancer"] = std::move(cancer);
+	network["smoker"] = std::move(cancer);
 
 	Node xray {"cancer"};
 	Node dysponea {"cancer"};
@@ -30,7 +30,9 @@ BN::BN() {
 	dysponea.setTableValue(condition, 0.65);
 	condition["cancer"] = false;
 	xray.setTableValue(condition, 0.2);
-	xray.setTableValue(condition, 0.30);
+	dysponea.setTableValue(condition, 0.30);
+	network["xray"] = std::move(xray);
+	network["dysponea"] = std::move(dysponea);
 }
 
 double BN::probability(const std::map<std::string, bool>& variables) {
