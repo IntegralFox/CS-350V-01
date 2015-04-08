@@ -1,11 +1,11 @@
 #include "node.hpp"
 #include <iostream>
 
-Node::Node() {
+Node::Node(const std::string& name) : name(name) {
 	CPT.reserve(1);
 }
 
-Node::Node(const std::initializer_list<std::string>& parents) {
+Node::Node(const std::string& name, const std::initializer_list<std::string>& parents) : name(name) {
 	int offset = 1;
 	for (const auto& p : parents) {
 		this->parents[p] = offset;
@@ -26,34 +26,31 @@ Node& Node::operator=(Node&& n) {
 	return *this;
 }
 
-void Node::setTableValue(const double probability) {
-	CPT[0] = probability;
-}
-
-void Node::setTableValue(const std::map<std::string, bool>& parentValues, const double probability) {
+void Node::setTableValue(const std::map<std::string, bool>& nodeValues, const double probability) {
 	int index = 0;
-	for (const auto& p : parentValues) {
+	for (const auto& parent : parents) {
+		const auto& parentName   = parent.first;
+		const auto& parentOffset = parent.second;
 		try {
-			if (!p.second) index += parents.at(p.first);
+			if (!nodeValues.at(parentName)) index += parentOffset;
 		} catch (std::exception& e) {
-			throw new std::out_of_range {"Node has no parent called " + p.first};
+			throw new std::out_of_range {"Node has has parent " + parentName + " not defined in provided map."};
 		}
 	}
 	CPT[index] = probability;
 }
 
-double Node::getTableValue(const bool nodeValue) {
-	return nodeValue ? CPT[0] : 1 - CPT[0];
-}
-
-double Node::getTableValue(const bool nodeValue, const std::map<std::string, bool>& parentValues) {
+double Node::getTableValue(const std::map<std::string, bool>& nodeValues) {
 	int index = 0;
-	for (const auto& p : parentValues) {
+	for (const auto& parent : parents) {
+		const auto& parentName   = parent.first;
+		const auto& parentOffset = parent.second;
+
 		try {
-			if (!p.second) index += parents.at(p.first);
+			if (!nodeValues.at(parentName)) index += parentOffset;
 		} catch (std::exception& e) {
-			throw new std::out_of_range {"Node has no parent called " + p.first};
+			throw new std::out_of_range {"Node has has parent " + parentName + " not defined in provided map."};
 		}
 	}
-	return nodeValue ? CPT[index] : 1 - CPT[index];
+	return nodeValues.at(name) ? CPT[index] : 1 - CPT[index];
 }
