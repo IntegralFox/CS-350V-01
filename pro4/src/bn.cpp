@@ -73,5 +73,18 @@ double BN::probability(const std::map<std::string, bool>& nodeValues) {
 }
 
 double BN::conditionalProbability(const std::map<std::string, bool>& query, const std::map<std::string, bool>& evidence) {
-	return 0;
+	std::map<std::string, bool> queryAndEvidence;
+
+	for (const auto& variable : query) {
+		const auto& variableName = variable.first;
+		const auto& variableValue = variable.second;
+		queryAndEvidence[variableName] = variableValue;
+	}
+	for (const auto& variable : evidence) {
+		const auto& variableName = variable.first;
+		const auto& variableValue = variable.second;
+		queryAndEvidence[variableName] = variableValue;
+	}
+
+	return probability(queryAndEvidence) / probability(evidence);
 }
