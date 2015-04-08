@@ -1,11 +1,10 @@
 #include "node.hpp"
-#include <iostream>
 
-Node::Node(const std::string& name) : name(name) {
+Node::Node(const std::string& name) : name {name} {
 	CPT.reserve(1);
 }
 
-Node::Node(const std::string& name, const std::initializer_list<std::string>& parents) : name(name) {
+Node::Node(const std::string& name, const std::initializer_list<std::string>& parents) : name {name} {
 	int offset = 1;
 	for (const auto& p : parents) {
 		this->parents[p] = offset;
@@ -17,13 +16,19 @@ Node::Node(const std::string& name, const std::initializer_list<std::string>& pa
 Node& Node::operator=(const Node& n) {
 	parents = n.parents;
 	CPT = n.CPT;
+	name = n.name;
 	return *this;
 }
 
 Node& Node::operator=(Node&& n) {
 	parents = std::move(n.parents);
 	CPT = std::move(n.CPT);
+	name = std::move(n.name);
 	return *this;
+}
+
+void Node::setTableValue(const double probability) {
+	CPT[0] = probability;
 }
 
 void Node::setTableValue(const std::map<std::string, bool>& nodeValues, const double probability) {
@@ -40,7 +45,7 @@ void Node::setTableValue(const std::map<std::string, bool>& nodeValues, const do
 	CPT[index] = probability;
 }
 
-double Node::getTableValue(const std::map<std::string, bool>& nodeValues) {
+double Node::getTableValue(const std::map<std::string, bool>& nodeValues) const {
 	int index = 0;
 	for (const auto& parent : parents) {
 		const auto& parentName   = parent.first;

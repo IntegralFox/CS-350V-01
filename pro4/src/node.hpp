@@ -21,6 +21,7 @@ class Node {
 	std::string name;
 
 public:
+	Node() {}
 	// Constructs a node with no parents
 	Node(const std::string&);
 
@@ -36,10 +37,11 @@ public:
 	Node& operator=(Node&&);
 
 	// Set the value of a conditional probability
+	void setTableValue(const double);
 	void setTableValue(const std::map<std::string, bool>&, const double);
 
 	// Get the value of a conditional probability
-	double getTableValue(const std::map<std::string, bool>&);
+	double getTableValue(const std::map<std::string, bool>&) const;
 };
 
 #endif
