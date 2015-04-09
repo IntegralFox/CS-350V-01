@@ -10,7 +10,6 @@
 #include "bn.hpp"
 
 int main(int argc, char** argv) {
-	BN bayesianNetwork {};
 	std::map<std::string, bool> query, evidence;
 	std::string line, variable;
 	std::string clearConsole = "\33[H\33[J";
@@ -58,6 +57,10 @@ int main(int argc, char** argv) {
 		evidence[variable] = (line == "t") ? true : false;
 	}
 
+	// Instantiate a new Bayesian Network
+	BN bayesianNetwork {};
+
+	// Compute and output the results
 	std::cout << clearConsole << "The probability of ";
 	for (const auto& variable : query) std::cout << variable.first << "=" << (variable.second ? "true" : "false");
 	std::cout << " given" << std::endl;

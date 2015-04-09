@@ -8,16 +8,17 @@
 #include <vector>
 
 class Node {
-	// Parents are stored as a map of parent names and offsets into the CPT
-	// that represents the number of entries before the parent becomes false.
+	// Parents are stored as an associative map of parent names and offsets into
+	// the CPT that represents the number of entries before the parent becomes false.
 	std::map<std::string, int> parents;
 
-	// The CPT table stores probabilities as a traditional truth table.
-	// As such, we can exploit its regular nature to not have to store the
-	// parent values.
+	// The CPT table stores probabilities as a traditional truth table by using
+	// numeric indices. The sum of the indices of parents that are false is used
+	// as the index. Thus all parents being true is 0 and all parents being
+	// false is the last index.
 	std::vector<double> CPT;
 
-	// The name of this node
+	// The name of this node in the network
 	std::string name;
 
 public:
@@ -28,7 +29,7 @@ public:
 	// Constructs a new node given a set of parent identifiers
 	Node(const std::string&, const std::initializer_list<std::string>&);
 
-	// Copy and Move constructor
+	// Copy and Move constructors
 	Node(const Node& n) : parents(n.parents), CPT(n.CPT), name(n.name) {};
 	Node(Node&& n) : parents(std::move(n.parents)), CPT(std::move(n.CPT)), name(std::move(n.name)) {};
 
