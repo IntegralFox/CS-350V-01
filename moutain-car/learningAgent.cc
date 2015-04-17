@@ -48,7 +48,7 @@ int main() {
 }
 
 int discretize(double value, double valueMin, double valueMax, int discretizations) {
-	double discSize = (valueMin - valueMax) / discretizations;
+	double discSize = (valueMax - valueMin) / discretizations;
 	double valueRelative = value - valueMin;
 	return static_cast<int>(valueRelative / discSize);
 }
