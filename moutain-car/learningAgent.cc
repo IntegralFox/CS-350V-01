@@ -15,8 +15,8 @@ int discretize(double, double, double, int);
 int eGreedyChoose(double*, double);
 
 int main() {
-	int numEpisodes;
-	double epsilon, verbosity;
+	int numEpisodes, verbosityFrequency;
+	double alpha, epsilon, gamma, verbosity;
 
 	std::cout << "Enter the number of episodes to train over: " << std::flush;
 	std::cin >> numEpisodes;
@@ -24,8 +24,15 @@ int main() {
 	std::cout << "Enter the value of epsilon to use in learning: " << std::flush;
 	std::cin >> epsilon;
 
+	std::cout << "Enter the value of gamma to use in learning: " << std::flush;
+	std::cin >> gamma;
+
+	std::cout << "Enter the value of alpha to use in learning: " << std::flush;
+	std::cin >> alpha;
+
 	std::cout << "Enter verbosity: " << std::flush;
 	std::cin >> verbosity;
+	verbosityFrequency = numEpisodes * (1-verbosity);
 
 	// Initialize Q[x][v][a] arbitrarily
 	double Q[NUM_DISCRETIZATIONS][NUM_DISCRETIZATIONS][NUM_ACTIONS];
@@ -34,15 +41,39 @@ int main() {
 			for (int a = 0; a < NUM_ACTIONS; ++a)
 				Q[x][v][a] = choose_random_value();
 
-	// Repeat for each episode
+	std::cout << "Agent is learning for " << numEpisodes << " episodes." << std::endl
+		<< "Progress is printed every " << verbosityFrequency << " episodes." << std::endl
+		<< "Steps taken:" << std::endl;
+
+	// Learn for N episodes
 	for (int episode = 0; episode < numEpisodes; ++episode) {
 		mcar simulator;
+		int x, x1, v, v1, a, a1;
 
-		for (int step = 0; !simulator.reached_goal(); ++step) {
-			int v = discretize(simulator.curr_vel(), V_MIN, V_MAX, NUM_DISCRETIZATIONS);
-			int x = discretize(simulator.curr_pos(), X_MIN, X_MAX, NUM_DISCRETIZATIONS);
-			int action = eGreedyChoose(Q[x][v], epsilon);
-			simulator.update_position_velocity(static_cast<ACTION>(action));
+		v = discretize(simulator.curr_vel(), V_MIN, V_MAX, NUM_DISCRETIZATIONS);
+		x = discretize(simulator.curr_pos(), X_MIN, X_MAX, NUM_DISCRETIZATIONS);
+		a = eGreedyChoose(Q[x][v], epsilon);
+
+		// Learn for N steps
+		int step = 0;
+		while (!simulator.reached_goal() && step < 1000) {
+			simulator.update_position_velocity(static_cast<ACTION>(a));
+			int reward = simulator.reward();
+			v1 = discretize(simulator.curr_vel(), V_MIN, V_MAX, NUM_DISCRETIZATIONS);
+			x1 = discretize(simulator.curr_pos(), X_MIN, X_MAX, NUM_DISCRETIZATIONS);
+			a1 = eGreedyChoose(Q[x1][v1], epsilon);
+
+			Q[x][v][a] += alpha * (reward + gamma * Q[x1][v1][a1] - Q[x][v][a]);
+
+			v = v1;
+			x = x1;
+			a = a1;
+
+			++step;
+		}
+
+		if (episode % verbosityFrequency == 0) {
+			std::cout << step << std::endl;
 		}
 	}
 }
