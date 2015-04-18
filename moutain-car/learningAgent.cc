@@ -6,12 +6,12 @@
 
 #define NUM_ACTIONS 3
 #define NUM_DISCRETIZATIONS 11
-#define X_MAX -1.2
-#define X_MIN 0.5
+#define X_MIN -1.2
+#define X_MAX 0.5
 #define V_MIN -0.07
 #define V_MAX 0.07
 #define EPSILON 0.1
-#define GAMMA 0.5
+#define GAMMA 0.1
 
 int discretize(double, double, double, int);
 int eGreedyChoose(double*, double);
@@ -19,7 +19,7 @@ int maxAction(double*);
 
 int main() {
 	int numEpisodes, verbosityFrequency;
-	double alpha, epsilon, gamma; 
+	double alpha;
 
 	std::cout << "Enter the number of episodes to train over: " << std::flush;
 	std::cin >> numEpisodes;
@@ -69,16 +69,16 @@ int main() {
 		}
 
 		if (episode % verbosityFrequency == 0) {
-			std::cout << step << std::endl;
+			std::cout << step << std::endl << std::flush;
 		}
 	}
-	
+
 	// Run Test starting at bottom of valley
 	std::cout << std::endl << "Testing agent on simulation starting at 0 with velocity 0" << std::endl;
 	mcar simulator(0, 0);
 	int step = 0;
-	
-	while (!simulator.reached_goal()) {
+
+	while (!simulator.reached_goal() && step < 1000) {
 		int x = discretize(simulator.curr_pos(), X_MIN, X_MAX, NUM_DISCRETIZATIONS);
 		int v = discretize(simulator.curr_vel(), V_MIN, V_MAX, NUM_DISCRETIZATIONS);
 		int a = maxAction(Q[x][v]);
@@ -92,7 +92,11 @@ int main() {
 		++step;
 	}
 
-	std::cout << "Reached top of hill in " << step << " steps." << std::endl;
+	if (simulator.reached_goal()) {
+		std::cout << "Reached top of hill in " << step << " steps." << std::endl;
+	} else {
+		std::cout << "Did not reach goal before timeout." << std::endl;
+	}
 }
 
 int discretize(double value, double valueMin, double valueMax, int discretizations) {
