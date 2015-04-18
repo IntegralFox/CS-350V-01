@@ -11,7 +11,7 @@
 #define V_MIN -0.07
 #define V_MAX 0.07
 #define EPSILON 0.1
-#define GAMMA 0.1
+#define GAMMA 0.5
 
 int discretize(double, double, double, int);
 int eGreedyChoose(double*, double);
