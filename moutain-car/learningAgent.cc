@@ -78,7 +78,7 @@ int main() {
 		}
 
 		if (episode % verbosityFrequency == 0) {
-			std::cout << step << std::endl << std::flush;
+			std::cout << step << ' ' << std::flush; // << std::endl << std::flush;
 		}
 	}
 
