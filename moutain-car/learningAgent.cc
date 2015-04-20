@@ -1,3 +1,7 @@
+/* Reinforcement Learning Agent
+ * Author: Michael Welborn
+ * Class: CS-350V-01 */
+
 #include <iostream>
 #include <iomanip>
 
