@@ -10,8 +10,9 @@
 #define X_MAX 0.5
 #define V_MIN -0.07
 #define V_MAX 0.07
-#define EPSILON 0.1
-#define GAMMA 0.5
+#define EPSILON_MIN 0.001
+#define EPSILON_MAX 0.1
+#define GAMMA 0.7
 
 int discretize(double, double, double, int);
 int eGreedyChoose(double*, double);
@@ -19,7 +20,7 @@ int maxAction(double*);
 
 int main() {
 	int numEpisodes, verbosityFrequency;
-	double alpha;
+	double alpha, epsilon, epsilonDelta;;
 
 	std::cout << "Enter the number of episodes to train over: " << std::flush;
 	std::cin >> numEpisodes;
@@ -36,8 +37,12 @@ int main() {
 			for (int a = 0; a < NUM_ACTIONS; ++a)
 				Q[x][v][a] = choose_random_value();
 
+	// Set up epsilon
+	epsilon = EPSILON_MAX;
+	epsilonDelta = (EPSILON_MAX - EPSILON_MIN) / numEpisodes;
+
 	// Learn for N episodes
-	for (int episode = 0; episode < numEpisodes; ++episode) {
+	for (int episode = 0; episode < numEpisodes; ++episode, epsilon -= epsilonDelta) {
 		mcar simulator;
 		int x, x1, v, v1, a, a1;
 
@@ -47,7 +52,7 @@ int main() {
 
 		v = discretize(simulator.curr_vel(), V_MIN, V_MAX, NUM_DISCRETIZATIONS);
 		x = discretize(simulator.curr_pos(), X_MIN, X_MAX, NUM_DISCRETIZATIONS);
-		a = eGreedyChoose(Q[x][v], EPSILON);
+		a = eGreedyChoose(Q[x][v], epsilon);
 
 		// Learn for N steps
 		int step = 0;
@@ -56,7 +61,7 @@ int main() {
 			int r = simulator.reward();
 			v1 = discretize(simulator.curr_vel(), V_MIN, V_MAX, NUM_DISCRETIZATIONS);
 			x1 = discretize(simulator.curr_pos(), X_MIN, X_MAX, NUM_DISCRETIZATIONS);
-			a1 = eGreedyChoose(Q[x1][v1], EPSILON);
+			a1 = eGreedyChoose(Q[x1][v1], epsilon);
 
 			int aMax = maxAction(Q[x1][v1]);
 			Q[x][v][a] += alpha * (r + GAMMA * Q[x1][v1][aMax] - Q[x][v][a]);
